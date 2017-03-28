@@ -1,0 +1,64 @@
+<?php
+
+class ModelModulePcapredict extends Model 
+{
+    public function createSchema() 
+    {
+        $this->db->query("
+        CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "pcapredict_settings` (
+        `key` CHAR(255) DEFAULT NULL,
+        `value` text DEFAULT NULL
+        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;");
+    }
+
+    public function deleteSchema() 
+    {
+        $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "pcapredict_settings`");
+    }
+
+    public function getSetting($key)
+    {
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "pcapredict_settings` WHERE `key` = '" . $key . "';");
+
+        $result = $query->row;
+
+        if (isset($result['value'])) {
+    	    return $result['value'];
+        }
+        else {
+            return NULL;
+        }
+    }
+    
+    public function saveSetting($key, $value)
+    {
+        if (!is_null($this->getSetting($key)))  {
+            $this->db->query("UPDATE `" . DB_PREFIX . "pcapredict_settings` SET `value` = '" . $value . "' WHERE `key` = '" . $key . "';");
+        } else {
+            $this->db->query("INSERT INTO `" . DB_PREFIX . "pcapredict_settings` SET `key` = '" . $key . "', `value` = '" . $value . "';");
+        }
+    }
+
+    public function getSettings()
+    {
+        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "pcapredict_settings`;");
+
+        return $query->rows;
+    }
+
+    public function saveSettings($settings)
+    {
+        if (is_array($settings)) 
+        {
+            foreach ($settings as $key => $value) 
+            {
+                $this->saveSetting($key, $value);
+            }
+        }
+    }
+
+    public function deleteSettings()
+    {
+        $this->db->query("DELETE FROM `" . DB_PREFIX . "pcapredict_settings`;");
+    }
+}

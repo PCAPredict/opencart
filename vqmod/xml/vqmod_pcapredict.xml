@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+	<id>PCA Predict Address Validation</id>
+	<version>1.0.0.0</version>
+	<vqmver>2.2.1</vqmver>
+	<author>https://www.pcapredict.com</author>
+	<file name="catalog/controller/common/header.php">
+		<operation error="skip" info="for 2.0.x and 2.1.x">
+			<search position="after">
+                <![CDATA[public function index() {]]>
+            </search>
+			<add>
+				<![CDATA[$data['pcapredict_account_code'] = $this->config->get('pcapredict_account_code');]]>
+            </add>
+		</operation>
+	</file>
+	<file name="catalog/view/theme/*/template/common/header.tpl">
+		<operation error="skip" info="for 2.0.x and 2.1.x">
+			<search position="before">
+                <![CDATA[</head>]]>
+            </search>
+			<add><![CDATA[<script>(function (a, c, b, e) {
+    a[b] = a[b] || {}; a[b].initial = { accountCode: "<?php echo $pcapredict_account_code; ?>", host: "<?php echo $pcapredict_account_code; ?>.pcapredict.com" };
+    a[b].on = a[b].on || function () { (a[b].onq = a[b].onq || []).push(arguments) }; var d = c.createElement("script");
+    d.async = !0; d.src = e; c = c.getElementsByTagName("script")[0]; c.parentNode.insertBefore(d, c)
+    })(window, document, "pca", "//<?php echo $pcapredict_account_code; ?>.pcapredict.com/js/sensor.js");</script>]]>
+            </add>
+		</operation>
+	</file>
+</modification>
