@@ -32,7 +32,7 @@
             </add>
 		</operation>
 	</file>
-	<!-- Getting the control onto the guest checkout payment fields. -->
+	<!-- Getting the control onto the default checkout payment fields. -->
 	<file name="catalog/controller/checkout/shipping_address.php,catalog/controller/checkout/payment_address.php,catalog/controller/checkout/guest.php,catalog/controller/checkout/guest_shipping.php,catalog/controller/checkout/register.php">
 		<operation error="skip" info="for 2.0.x and 2.1.x">
 			<search position="after">
