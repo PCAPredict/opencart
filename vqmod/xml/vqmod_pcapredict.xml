@@ -188,6 +188,27 @@ pca.on("load", function(type, key, control){
 	</file>
 
 	<!-- Customer front end account address edit -->
-	
-
+	<!-- Customer register form -->
+	<file name="catalog/controller/account/address.php,catalog/controller/account/register.php">
+		<operation error="skip" info="for 2.0.x and 2.1.x">
+			<search position="after">
+                <![CDATA[public function index() {]]>
+            </search>
+			<add>
+				<![CDATA[
+					$data['pcapredict_init_code'] = 'console.log("Loading PCA"); pca.load();';
+				]]>
+            </add>
+		</operation>
+	</file>
+	<file name="catalog/view/theme/*/template/checkout/address_form.tpl,catalog/view/theme/*/template/checkout/register.tpl">
+		<operation error="skip" info="for 2.0.x and 2.1.x">
+			<search position="bottom">
+				<![CDATA[]]>
+			</search>
+			<add>
+				<![CDATA[<script><?php echo $pcapredict_init_code; ?></script>]]>
+            </add>
+		</operation>
+	</file>
 </modification>
