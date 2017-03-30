@@ -4,7 +4,137 @@
 	<version>1.0.0.0</version>
 	<vqmver>2.2.1</vqmver>
 	<author>https://www.pcapredict.com</author>
-	<!-- Dropping the control globally accross the site. -->
+
+	<!-- Dropping the control globally accross the back end site. -->
+	<file name="admin/controller/common/header.php">
+		<operation error="skip" info="for 2.0.x and 2.1.x">
+			<search position="after">
+                <![CDATA[public function index() {]]>
+            </search>
+			<add>
+				<![CDATA[
+					$data['pcapredict_account_code'] = $this->config->get('pcapredict_account_code');
+					$data['pcapredict_custom_javascript'] = $this->config->get('pcapredict_custom_javascript');
+				]]>
+            </add>
+		</operation>
+	</file>
+	<file name="admin/view/template/common/header.tpl">
+		<operation error="skip" info="for 2.0.x and 2.1.x">
+			<search position="before">
+                <![CDATA[</head>]]>
+            </search>
+			<add>
+				<![CDATA[
+					<script src="view/javascript/module/pcapredict.js" type="text/javascript"></script>
+					<script>init_pca_tag('<?php echo $pcapredict_account_code; ?>');</script>
+					<?php if (strlen($pcapredict_custom_javascript) > 0) { ?><script><?php echo $pcapredict_custom_javascript; ?></script><?php } ?>
+				]]>
+            </add>
+		</operation>
+	</file>
+
+	<!-- Customers backend address fields -->
+	<file name="admin/view/template/customer/customer_form.tpl">
+		<operation error="skip" info="for 2.0.x and 2.1.x">
+			<search position="before">
+				<![CDATA[function addAddress() {]]>
+			</search>
+			<add>
+				<![CDATA[if(typeof(addAddress) == "function"){
+
+var pca_saved_addAddress = addAddress;
+addAddress = function() {
+	var ret = pca_saved_addAddress.apply(this, arguments);
+	pca_setup_clicks();
+	return ret;
+}
+
+function pca_setup_clicks(){
+	var listitems = document.querySelectorAll("#address li");
+	for(var i = 0; i < listitems.length; i++){
+		var el = listitems[i];
+		if(!el.pca_click){
+			el.pca_click = function(event){
+				if (event != undefined && event.target.hash != undefined && event.target.hash.indexOf("#tab-address") > -1) 
+				{
+					var hasNumValue = event.target.hash.toLowerCase().replace('#tab-address','');
+
+					selectedAddress = isNaN(parseInt(hasNumValue)) ? 0 : hasNumValue;
+					pca.load();
+				}
+				else 
+				{
+					selectedAddress = -1;
+					pca.load();
+				}
+			}
+			el.addEventListener("click", el.pca_click);
+		}
+	}
+}
+pca_setup_clicks();
+
+var selectedAddress = 1;
+
+// This waits till the control has loaded and then we replace the discovered fields with the actual active fields shown.
+pca.on("load", function(type, key, control){
+
+	for(var f = 0; f < control.fields.length; f++){
+
+		var hasNumValue = $('#address').children(".active").children("a")[0].hash.toLowerCase().replace('#tab-address','');
+
+		var toUse = (selectedAddress == - 1) ? (isNaN(parseInt(hasNumValue)) ? 0 : hasNumValue) : selectedAddress;
+
+		var noInput = control.fields[f].element.replace("input-","");
+		var noRegex = noInput.replace(/\[0-9\]\*/g, "");
+		var fieldValue = noRegex.match(/[a-zA-Z]*-[1-2]{0,1}/);
+		var justFieldLetters = noRegex.match(/[a-zA-Z]*/);
+
+		if (fieldValue == null && justFieldLetters != null)
+		{
+			control.fields[f].element = 'input-' + justFieldLetters[0] + toUse;
+		}
+		else 
+		{
+			control.fields[f].element = 'input-' + fieldValue[0] + toUse;
+		}
+	}
+	control.reload();
+	
+	console.log("pca load - " + toUse);
+});
+
+}]]>
+            </add>
+		</operation>
+	</file>
+
+	<!-- Getting the control onto the admin order backend. -->
+	<file name="admin/controller/sale/order.php">
+		<operation error="skip" info="for 2.0.x and 2.1.x">
+			<search position="after">
+                <![CDATA[public function getForm() {]]>
+            </search>
+			<add>
+				<![CDATA[
+					$data['pcapredict_init_code'] = 'console.log("Loading PCA"); pca.load();';
+				]]>
+            </add>
+		</operation>
+	</file>
+	<file name="admin/view/template/sale/order_form.tpl">
+		<operation error="skip" info="for 2.0.x and 2.1.x">
+			<search position="after">
+				<![CDATA[<?php echo $header; ?><?php echo $column_left; ?>]]>
+			</search>
+			<add>
+				<![CDATA[<?php echo $pcapredict_init_code; ?>]]>
+            </add>
+		</operation>
+	</file>
+
+	<!-- Dropping the control globally accross the front end site. -->
 	<file name="catalog/controller/common/header.php">
 		<operation error="skip" info="for 2.0.x and 2.1.x">
 			<search position="after">
@@ -32,6 +162,7 @@
             </add>
 		</operation>
 	</file>
+
 	<!-- Getting the control onto the default checkout payment fields. -->
 	<file name="catalog/controller/checkout/shipping_address.php,catalog/controller/checkout/payment_address.php,catalog/controller/checkout/guest.php,catalog/controller/checkout/guest_shipping.php,catalog/controller/checkout/register.php">
 		<operation error="skip" info="for 2.0.x and 2.1.x">
@@ -55,4 +186,8 @@
             </add>
 		</operation>
 	</file>
+
+	<!-- Customer front end account address edit -->
+	
+
 </modification>
