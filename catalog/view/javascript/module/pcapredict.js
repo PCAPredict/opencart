@@ -19,8 +19,6 @@ function init_pca_tag(accountCode) {
     // Need to update the state field when the country selector is changed, so we also need to fire a change on the country so it can make the ajax request to get the 
     // state/regions. This means we need a mechanism to wait for the response and then choose the region/state.
     
-    // TODO - try and plugin to the ajax call a script execute to call on.
-
     pca.on('data', function(source, key, address, variations) {
         switch (source) {
             case "address":

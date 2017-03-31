@@ -63,7 +63,7 @@ function pca_setup_clicks(){
 					selectedAddress = isNaN(parseInt(hasNumValue)) ? 0 : hasNumValue;
 					pca.load();
 				}
-				else 
+				else
 				{
 					selectedAddress = -1;
 					pca.load();
