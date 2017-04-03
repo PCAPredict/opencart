@@ -21,11 +21,9 @@ var pca_tag = (function() {
             var visibleInputElements = getVisibleInputElements();
 
             if (currentFieldCount == null) {
-                console.log("Init field count " + visibleInputElements.length);
                 currentFieldCount = visibleInputElements.length;
             }
             else if (visibleInputElements.length != currentFieldCount) {
-                console.log(currentFieldCount + " > " + visibleInputElements.length);
                 currentFieldCount = visibleInputElements.length;
                 reloadCapturePlusControls();
             }
@@ -56,7 +54,6 @@ var pca_tag = (function() {
             $(".pca").empty();
             for (var i = 0; i < pca.capturePlus.controls.length; i++) {
                 pca.capturePlus.controls[i].reload();
-                console.log("Control " + pca.capturePlus.controls[i].key + " reloaded.");
             }
         }
     };
@@ -113,11 +110,22 @@ var pca_tag = (function() {
                     }
                 })
             }
-            else {
-                console.log("Already called init");
-            }
         },
 
-        pollInputFieldChange : pollInputFieldChange
+        pollInputFieldChange : pollInputFieldChange,
+
+        getVisibleInputElements : getVisibleInputElements,
+
+        reloadCapturePlusControls : reloadCapturePlusControls
+    }
+})();
+
+(function() {
+    // If we load on the checkout page then setup the polling to monitor field change.
+    // This means if One-Step Checkouts are installed we can still load the control
+    // and the user should be setup without the need for futher work.
+    if (document.location.href.indexOf("checkout") > -1) 
+    { 
+        pca_tag.pollInputFieldChange(); 
     }
 })();

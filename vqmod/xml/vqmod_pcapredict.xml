@@ -5,45 +5,45 @@
 	<vqmver>2.2.1</vqmver>
 	<author>https://www.pcapredict.com</author>
 
-	<!-- Dropping the control globally accross the back end site. -->
+	<!-- Header back end - Place in the header to load tag. -->
 	<file name="admin/controller/common/header.php">
 		<operation error="skip" info="for 2.0.x and 2.1.x">
 			<search position="after">
-                <![CDATA[public function index() {]]>
-            </search>
+				<![CDATA[public function index() {]]>
+			</search>
 			<add>
-				<![CDATA[
-					$data['pcapredict_status'] = $this->config->get('pcapredict_status');
-					$data['pcapredict_account_code'] = $this->config->get('pcapredict_account_code');
-					$data['pcapredict_custom_javascript'] = $this->config->get('pcapredict_custom_javascript_backend');
-				]]>
-            </add>
+				<![CDATA[$data['pcapredict_status'] = $this->config->get('pcapredict_status');
+$data['pcapredict_account_code'] = $this->config->get('pcapredict_account_code');
+$data['pcapredict_custom_javascript'] = $this->config->get('pcapredict_custom_javascript_backend');]]>
+			</add>
 		</operation>
 	</file>
 	<file name="admin/view/template/common/header.tpl">
 		<operation error="skip" info="for 2.0.x and 2.1.x">
 			<search position="before">
-                <![CDATA[</head>]]>
-            </search>
-			<add><![CDATA[<?php if (intval($pcapredict_status) == 1) : ?>
+				<![CDATA[</head>]]>
+			</search>
+			<add>
+				<![CDATA[<?php if (intval($pcapredict_status) == 1) : ?>
 <script src="view/javascript/module/pcapredict.js" type="text/javascript"></script>
 <script>pca_tag.init('<?php echo $pcapredict_account_code; ?>');</script>
-<?php if (strlen($pcapredict_custom_javascript) > 0) { ?><script><?php echo $pcapredict_custom_javascript; ?></script><?php } ?>
-<?php endif; ?>]]></add>
+<?php if (strlen($pcapredict_custom_javascript) > 0) { ?>
+<script><?php echo $pcapredict_custom_javascript; ?></script>
+<?php } ?>
+<?php endif; ?>]]>
+			</add>
 		</operation>
 	</file>
 
-	<!-- Customers backend address fields -->
+	<!-- Customer Admin Address Add/Edit - Bit of logic needed for switching current address set and the control looking at the correct set. -->
 	<file name="admin/controller/customer/customer.php">
 		<operation error="skip" info="for 2.0.x and 2.1.x">
 			<search position="after">
-                <![CDATA[protected function getForm() {]]>
-            </search>
+				<![CDATA[protected function getForm() {]]>
+			</search>
 			<add>
-				<![CDATA[
-					$data['pcapredict_status'] = $this->config->get('pcapredict_status');
-				]]>
-            </add>
+				<![CDATA[$data['pcapredict_status'] = $this->config->get('pcapredict_status');]]>
+			</add>
 		</operation>
 	</file>
 	<file name="admin/view/template/customer/customer_form.tpl">
@@ -51,7 +51,8 @@
 			<search position="before">
 				<![CDATA[function addAddress() {]]>
 			</search>
-			<add><![CDATA[<?php if (intval($pcapredict_status) == 1) : ?>if(typeof(addAddress) == "function"){
+			<add>
+				<![CDATA[<?php if (intval($pcapredict_status) == 1) : ?>if(typeof(addAddress) == "function"){
 
 var pca_saved_addAddress = addAddress;
 addAddress = function() {
@@ -111,75 +112,50 @@ pca.on("load", function(type, key, control){
 		}
 	}
 	control.reload();
-	
-	console.log("pca load - " + toUse);
 });
 
-}<?php endif; ?>]]></add>
+}<?php endif; ?>]]>
+			</add>
 		</operation>
 	</file>
 
-	<!-- Getting the control onto the admin order backend. -->
-	<file name="admin/controller/sale/order.php">
-		<operation error="skip" info="for 2.0.x and 2.1.x">
-			<search position="after">
-                <![CDATA[public function getForm() {]]>
-            </search>
-			<add>
-				<![CDATA[
-					$data['pcapredict_status'] = $this->config->get('pcapredict_status');
-					$data['pcapredict_init_code'] = 'console.log("Loading PCA"); pca.load();';
-				]]>
-            </add>
-		</operation>
-	</file>
-	<file name="admin/view/template/sale/order_form.tpl">
-		<operation error="skip" info="for 2.0.x and 2.1.x">
-			<search position="after">
-				<![CDATA[<?php echo $header; ?><?php echo $column_left; ?>]]>
-			</search>
-			<add><![CDATA[<?php if ($pcapredict_status) : echo $pcapredict_init_code; endif; ?>]]></add>
-		</operation>
-	</file>
-
-	<!-- Dropping the control globally accross the front end site. -->
+	<!-- Header front end site - Place the tag snippet in the header. -->
 	<file name="catalog/controller/common/header.php">
 		<operation error="skip" info="for 2.0.x and 2.1.x">
 			<search position="after">
-                <![CDATA[public function index() {]]>
-            </search>
+				<![CDATA[public function index() {]]>
+			</search>
 			<add>
-				<![CDATA[
-					$data['pcapredict_status'] = $this->config->get('pcapredict_status');
-					$data['pcapredict_account_code'] = $this->config->get('pcapredict_account_code');
-					$data['pcapredict_custom_javascript'] = $this->config->get('pcapredict_custom_javascript_frontend');
-				]]>
-            </add>
+				<![CDATA[$data['pcapredict_status'] = $this->config->get('pcapredict_status');
+$data['pcapredict_account_code'] = $this->config->get('pcapredict_account_code');
+$data['pcapredict_custom_javascript'] = $this->config->get('pcapredict_custom_javascript_frontend');]]>
+			</add>
 		</operation>
 	</file>
 	<file name="catalog/view/theme/*/template/common/header.tpl">
 		<operation error="skip" info="for 2.0.x and 2.1.x">
 			<search position="before">
-                <![CDATA[</head>]]>
-            </search>
-			<add><![CDATA[<?php if ($pcapredict_status) : ?><script src="catalog/view/javascript/module/pcapredict.js" type="text/javascript"></script>
+				<![CDATA[</head>]]>
+			</search>
+			<add>
+				<![CDATA[<?php if ($pcapredict_status) : ?>
+<script src="catalog/view/javascript/module/pcapredict.js" type="text/javascript"></script>
 <script>pca_tag.init('<?php echo $pcapredict_account_code; ?>');</script>
-<script><?php if (strlen($pcapredict_custom_javascript) > 0) { ?><?php echo $pcapredict_custom_javascript; ?><?php } ?></script><?php endif; ?>]]></add>
+<script><?php if (strlen($pcapredict_custom_javascript) > 0) { ?><?php echo $pcapredict_custom_javascript; ?><?php } ?></script>
+<?php endif; ?>]]>
+			</add>
 		</operation>
 	</file>
 
-	<!-- Getting the control onto the default checkout payment fields. -->
+	<!-- Frontend default checkout - Fields are not visible at the time of the tag load. When fields are visible calling pca.load will init them. -->
 	<file name="catalog/controller/checkout/shipping_address.php,catalog/controller/checkout/payment_address.php,catalog/controller/checkout/guest.php,catalog/controller/checkout/guest_shipping.php,catalog/controller/checkout/register.php">
 		<operation error="skip" info="for 2.0.x and 2.1.x">
 			<search position="after">
-                <![CDATA[public function index() {]]>
-            </search>
+				<![CDATA[public function index() {]]>
+			</search>
 			<add>
-				<![CDATA[
-					$data['pcapredict_status'] = $this->config->get('pcapredict_status');
-					$data['pcapredict_init_code'] = 'console.log("Loading PCA"); pca.load();';
-				]]>
-            </add>
+				<![CDATA[$data['pcapredict_status'] = $this->config->get('pcapredict_status');]]>
+			</add>
 		</operation>
 	</file>
 	<file name="catalog/view/theme/*/template/checkout/shipping_address.tpl,catalog/view/theme/*/template/checkout/payment_address.tpl,catalog/view/theme/*/template/checkout/guest.tpl,catalog/view/theme/*/template/checkout/guest_shipping.tpl,catalog/view/theme/*/template/checkout/register.tpl">
@@ -187,31 +163,9 @@ pca.on("load", function(type, key, control){
 			<search position="bottom">
 				<![CDATA[]]>
 			</search>
-			<add><![CDATA[<?php if ($pcapredict_status) : echo $pcapredict_init_code; endif; ?>]]></add>
-		</operation>
-	</file>
-
-	<!-- Customer front end account address edit -->
-	<!-- Customer register form -->
-	<file name="catalog/controller/account/address.php,catalog/controller/account/register.php">
-		<operation error="skip" info="for 2.0.x and 2.1.x">
-			<search position="after">
-                <![CDATA[public function index() {]]>
-            </search>
 			<add>
-				<![CDATA[
-					$data['pcapredict_status'] = $this->config->get('pcapredict_status');
-					$data['pcapredict_init_code'] = 'console.log("Loading PCA"); pca.load();';
-				]]>
-            </add>
-		</operation>
-	</file>
-	<file name="catalog/view/theme/*/template/checkout/address_form.tpl,catalog/view/theme/*/template/checkout/register.tpl">
-		<operation error="skip" info="for 2.0.x and 2.1.x">
-			<search position="bottom">
-				<![CDATA[]]>
-			</search>
-			<add><![CDATA[<?php if ($pcapredict_status) : echo $pcapredict_init_code; endif; ?>]]></add>
+				<![CDATA[<?php if ($pcapredict_status) : ?><script>pca.load();</script><?php endif; ?>]]>
+			</add>
 		</operation>
 	</file>
 </modification>
