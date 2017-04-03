@@ -71,7 +71,7 @@
                   <!-- Javascript -->
                   <div class="row rowset">
                       <div class="col-xs-12">
-                          <label class="customjs-label">Front-end custom JavaScript</label>
+                          <label class="customjs-label">Custom JavaScript</label>
                           <textarea name="custom_javascript" id="custom_javascript"><?php echo $custom_javascript; ?></textarea>          
                           <comment>Paste any custom JavaScript code that you have in here.</comment>
                       </div>
