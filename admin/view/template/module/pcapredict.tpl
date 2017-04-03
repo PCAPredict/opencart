@@ -20,7 +20,7 @@
   <div class="page-content container-fluid">
     <div class="pcapredict-container">
       <div class="pcapredict-message-container">
-        <div class="pcapredict-message"><?php echo isset($status_message) ? $status_message : ''; ?></div>
+        <div class="pcapredict-message <?php echo $status_message_type ?>"><?php echo isset($status_message) ? $status_message : ''; ?></div>
       </div>
 
       <?php  if ($loggedin) : ?>

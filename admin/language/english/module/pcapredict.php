@@ -36,3 +36,5 @@ $_['license_http_status_401']           = 'Authentication was not possible.';
 $_['license_http_status_200']           = 'Setup complete.';
 
 $_['error_permission']                  = 'Warning: You do not have permission to modify module "PCA Predict"';
+
+$_['settings_updated_successfully']     = 'Your settings have been updated successfully';

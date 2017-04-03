@@ -65,10 +65,12 @@ class ControllerModulePcapredict extends Controller {
                             if (curl_getinfo($license_curl, CURLINFO_HTTP_CODE) == 401)
                             {
                                 $data['status_message'] = $this->language->get('license_http_status_401');
+                                $data['status_message_type'] = 'pcapredict-message-error';
                             } 
                             else if (curl_getinfo($license_curl, CURLINFO_HTTP_CODE) == 200) 
                             {
                                 $data['status_message'] = $this->language->get('license_http_status_200');
+                                $data['status_message_type'] = 'pcapredict-message-success';
                             }
                             
                             // HELP NOTE : Make sure any settings you pass in the array to the settings are prepended with the same name as the module...
@@ -84,6 +86,7 @@ class ControllerModulePcapredict extends Controller {
                         else 
                         {
                             $data['status_message'] = $this->language->get('http_status_other');
+                            $data['status_message_type'] = 'pcapredict-message-error';
                         }
 
                         curl_close($license_curl);
@@ -93,10 +96,12 @@ class ControllerModulePcapredict extends Controller {
                         if (curl_getinfo($auth_curl, CURLINFO_HTTP_CODE) == 401)
                         {
                             $data['status_message'] = $this->language->get('login_http_status_401');
+                            $data['status_message_type'] = 'pcapredict-message-error';
                         } 
                         else 
                         {
                             $data['status_message'] = $this->language->get('http_status_other');
+                            $data['status_message_type'] = 'pcapredict-message-error';
                         }
                     }
 
@@ -112,6 +117,9 @@ class ControllerModulePcapredict extends Controller {
                     $storageSettings['pcapredict_custom_javascript_backend'] = $_POST['custom_javascript_backend'];
 
                     $this->model_setting_setting->editSetting('pcapredict', $storageSettings);
+
+                    $data['status_message'] = $this->language->get('settings_updated_successfully');
+                    $data['status_message_type'] = 'pcapredict-message-success';
                 }
                 else if (isset($this->request->get['logout'])) 
                 {
@@ -138,6 +146,7 @@ class ControllerModulePcapredict extends Controller {
         // send error if there is one.
         if (isset($this->error['warning'])){
             $data['status_message'] = $this->error['warning'];
+            $data['status_message_type'] = 'pcapredict-message-error';
         }
 
         $settings = $this->model_setting_setting->getSetting('pcapredict');
