@@ -167,9 +167,22 @@ class ControllerModulePcapredict extends Controller {
         $data['button_logout'] = $this->language->get('button_logout');
         $data['button_login'] = $this->language->get('button_login');
         
-        $data['link_register'] = $this->language->get('link_register');
-        $data['link_password'] = $this->language->get('link_password');
-        
+        $data['link_password_text'] = $this->language->get('link_password_text');
+        $data['link_password_href'] = $this->language->get('link_password_href');
+
+        // Labels and descriptions
+        $data['account_code_label'] = $this->language->get('account_code_label');
+        $data['password_label'] = $this->language->get('password_label');
+        $data['status_label'] = $this->language->get('status_label');
+        $data['login_description_1'] = $this->language->get('login_description_1');
+        $data['login_description_2'] = $this->language->get('login_description_2');
+        $data['status_description'] = $this->language->get('status_description');
+        $data['custom_javascript_frontend_label'] = $this->language->get('custom_javascript_frontend_label');
+        $data['custom_javascript_backend_label'] = $this->language->get('custom_javascript_backend_label');
+        $data['custom_javascript_frontend_description'] = $this->language->get('custom_javascript_frontend_description');
+        $data['custom_javascript_backend_description'] = $this->language->get('custom_javascript_backend_description');
+        $data['logout_description'] = $this->language->get('logout_description');
+
         // Breadcrumbs
         $data['breadcrumbs'] = array();
         $data['breadcrumbs'][] = array(

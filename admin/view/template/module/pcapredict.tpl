@@ -40,7 +40,7 @@
                   <div class="row rowset" style="font-size: 16px;">
                   
                       <div class="col-xs-6 col-sm-3">
-                          <label><b>Account Code</b></label>
+                          <label><b><?php echo $account_code_label ?></b></label>
                       </div>
                       <div class="col-xs-6 col-sm-3">
                           <label><?php echo strtoupper($account_code); ?></label>
@@ -52,7 +52,7 @@
 
                   <div class="row rowset">
                     <div class="col-xs-6 col-sm-3" style="font-size: 16px;">
-                      <label><b>Status</b></label>
+                      <label><b><?php echo $status_label ?></b></label>
                     </div>
                     <div class="col-xs-6 col-sm-3">
                       <?php if (intval($status) == 1) : ?>
@@ -64,23 +64,23 @@
                       <?php endif; ?>
                     </div>
                     <div class="col-xs-12 col-sm-6">
-                        <label class="deactivate-message">You can deactivate the PCA Predict extension without logging out.</label>
+                        <label class="deactivate-message"><?php echo $status_description; ?></label>
                     </div>
                   </div>
 
                     <!-- Javascript -->
                     <div class="row rowset">
                         <div class="col-xs-12">
-                            <label class="customjs-label">Custom Front-end JavaScript</label>
+                            <label class="customjs-label"><?php echo $custom_javascript_frontend_label ?></label>
                             <textarea name="custom_javascript_frontend" id="custom_javascript_frontend"><?php echo $custom_javascript_frontend; ?></textarea>          
-                            <comment>Paste any custom JavaScript code that you have in here to put on the front end of the site.</comment>
+                            <comment><?php echo $custom_javascript_frontend_description ?></comment>
                         </div>
                     </div>
                     <div class="row rowset">
                         <div class="col-xs-12">
-                            <label class="customjs-label">Custom Back-end JavaScript</label>
+                            <label class="customjs-label"><?php echo $custom_javascript_backend_label ?></label>
                             <textarea name="custom_javascript_backend" id="custom_javascript_backend"><?php echo $custom_javascript_backend; ?></textarea>          
-                            <comment>Paste any custom JavaScript code that you have in here to put in the admin area of the site.</comment>
+                            <comment><?php echo $custom_javascript_backend_description ?></comment>
                         </div>
                     </div>
 
@@ -106,7 +106,7 @@
                           <button class="button-light" id="btnLogOut" type="submit" form="form-pcapredict-logout" value="Log Out"><?php echo $button_logout; ?></button>
                       </div>
                       <div class="col-xs-9">
-                          <comment>Logging out will stop PCA Predict from working in your site. You can log back in at any time.</comment>
+                          <comment><?php echo $logout_description; ?></comment>
                       </div>
                   </div>
               </fieldset>
@@ -128,16 +128,16 @@
                   
                   <!-- Account code label -->
                   <div class="row rowset" style="font-size: 14px;">
-                      <p>You need a PCA Predict account in order to use this extension.</p>
-                      <p>If you don't have a PCA Predict account, you can <a class="external-link" href="https://www.pcapredict.com/Register/" target="_blank"><?php echo $link_register; ?></a>.</p>
+                      <p><?php echo $login_description_1 ?></p>
+                      <p><?php echo $login_description_2 ?></p>
                   </div>
 
                   <div class="row rowset">
                       <div class="col-xs-3">
-                          <label>Account Code</label>
+                          <label><?php echo $account_code_label ?></label>
                       </div>
                       <div class="col-xs-5">
-                          <input type="text" name="account_code" id="account_code" placeholder="Account Code" >
+                          <input type="text" name="account_code" id="account_code" placeholder="<?php echo $account_code_label ?>" >
                       </div>
                       <div class="col-xs-4">             
                           <comment></comment>
@@ -146,11 +146,11 @@
 
                   <div class="row rowset">
                       <div class="col-xs-3">
-                          <label>Password</label>
+                          <label><?php echo $password_label ?></label>
                       </div>
                       <div class="col-xs-5">
-                          <input type="password" name="password" id="password" placeholder="Password" >
-                          <a class="external-link" href="https://account.pcapredict.com/security/forgot/" target="_blank"><?php echo $link_password; ?></a>
+                          <input type="password" name="password" id="password" placeholder="<?php echo $password_label ?>" >
+                          <a class="external-link" href="<?php echo $link_password_href; ?>" target="_blank"><?php echo $link_password_text; ?></a>
                       </div>
                       <div class="col-xs-4">             
                           <comment></comment>
