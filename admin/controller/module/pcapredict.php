@@ -77,7 +77,8 @@ class ControllerModulePcapredict extends Controller {
                             $storageSettings['pcapredict_status'] = 1;
                             $storageSettings['pcapredict_pca_token'] = $decodedToken;
                             $storageSettings['pcapredict_account_code'] = $accountCode;
-                            $storageSettings['pcapredict_custom_javascript'] = '';
+                            $storageSettings['pcapredict_custom_javascript_frontend'] = '';
+                            $storageSettings['pcapredict_custom_javascript_backend'] = '';
                             $this->model_setting_setting->editSetting('pcapredict', $storageSettings);
                         } 
                         else 
@@ -107,7 +108,8 @@ class ControllerModulePcapredict extends Controller {
 
                     $storageSettings = $this->model_setting_setting->getSetting('pcapredict');
                     $storageSettings['pcapredict_status'] = $status;
-                    $storageSettings['pcapredict_custom_javascript'] = $_POST['custom_javascript'];
+                    $storageSettings['pcapredict_custom_javascript_frontend'] = $_POST['custom_javascript_frontend'];
+                    $storageSettings['pcapredict_custom_javascript_backend'] = $_POST['custom_javascript_backend'];
 
                     $this->model_setting_setting->editSetting('pcapredict', $storageSettings);
                 }
@@ -144,7 +146,8 @@ class ControllerModulePcapredict extends Controller {
         if ($settings && count($settings) > 0) {
             $data['account_code'] = $settings['pcapredict_account_code'];
             $data['pca_token'] = $settings['pcapredict_pca_token'];
-            $data['custom_javascript'] = $settings['pcapredict_custom_javascript'];
+            $data['custom_javascript_frontend'] = $settings['pcapredict_custom_javascript_frontend'];
+            $data['custom_javascript_backend'] = $settings['pcapredict_custom_javascript_backend'];
             $data['status'] = $settings['pcapredict_status'];
             $data['loggedin'] = true;
         } else {

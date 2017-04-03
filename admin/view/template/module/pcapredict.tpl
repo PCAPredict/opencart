@@ -68,14 +68,21 @@
                     </div>
                   </div>
 
-                  <!-- Javascript -->
-                  <div class="row rowset">
-                      <div class="col-xs-12">
-                          <label class="customjs-label">Front-end custom JavaScript</label>
-                          <textarea name="custom_javascript" id="custom_javascript"><?php echo $custom_javascript; ?></textarea>          
-                          <comment>Paste any custom JavaScript code that you have in here.</comment>
-                      </div>
-                  </div>
+                    <!-- Javascript -->
+                    <div class="row rowset">
+                        <div class="col-xs-12">
+                            <label class="customjs-label">Custom Front-end JavaScript</label>
+                            <textarea name="custom_javascript_frontend" id="custom_javascript_frontend"><?php echo $custom_javascript_frontend; ?></textarea>          
+                            <comment>Paste any custom JavaScript code that you have in here to put on the front end of the site.</comment>
+                        </div>
+                    </div>
+                    <div class="row rowset">
+                        <div class="col-xs-12">
+                            <label class="customjs-label">Custom Back-end JavaScript</label>
+                            <textarea name="custom_javascript_backend" id="custom_javascript_backend"><?php echo $custom_javascript_backend; ?></textarea>          
+                            <comment>Paste any custom JavaScript code that you have in here to put in the admin area of the site.</comment>
+                        </div>
+                    </div>
 
                   <div class="row rowset">
                       <div class="col-xs-12">
