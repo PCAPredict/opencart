@@ -24,9 +24,9 @@ class ControllerModulePcapredict extends Controller {
                     //Make call to pca and setup keys if needs be.
 
                     $data_string = json_encode(array('accountcode' => $accountCode, 
-                                            'password' => $_POST['password'],
-                                            'deviceDescription' => 'OpenCart | ' . $_POST['hostname'],
-                                            'deviceType' => 1));
+                                                     'password' => $_POST['password'],
+                                                     'deviceDescription' => 'OpenCart | ' . $_POST['hostname'],
+                                                     'deviceType' => 1));
 
                     $auth_curl = curl_init('https://app_api.pcapredict.com/api/primaryaccountauthorisation');                                                                      
                     curl_setopt($auth_curl, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
@@ -45,7 +45,21 @@ class ControllerModulePcapredict extends Controller {
 
                         $decodedToken = $decoded['token']['token'];
 
-                        $data_string = json_encode(array('generateAddress' => true));
+                        // We get the country code of the store so we can set the phone validation to a locality, i.e. +44 not needed for UK numbers.
+                        $countryId = $this->config->get('config_country_id');
+                        $this->load->model('localisation/country');
+                        $countryList = $this->model_localisation_country->getCountries();
+                        $storeCountryCode = '';
+                        foreach ($countryList as $country) {
+                            if ($countryId == $country['country_id']) {
+                                $storeCountryCode = $country['iso_code_2'];
+                            }
+                        }
+
+                        $data_string = json_encode(array('generateAddress' => true, 
+                                                         'generateEmail' => true, 
+                                                         'generatePhone' => true, 
+                                                         'mobileCountryCodeDefaultValue' => $storeCountryCode));
 
                         $license_curl = curl_init('https://app_api.pcapredict.com/api/apps/opencart/0.0.1/licences');                                                                      
                         curl_setopt($license_curl, CURLOPT_CUSTOMREQUEST, "POST");                                                                     

@@ -91,27 +91,29 @@ var selectedAddress = 1;
 // This waits till the control has loaded and then we replace the discovered fields with the actual active fields shown.
 pca.on("load", function(type, key, control){
 
-	for(var f = 0; f < control.fields.length; f++){
+	if (type == "capture+") {
+		for(var f = 0; f < control.fields.length; f++){
 
-		var hasNumValue = $('#address').children(".active").children("a")[0].hash.toLowerCase().replace('#tab-address','');
+			var hasNumValue = $('#address').children(".active").children("a")[0].hash.toLowerCase().replace('#tab-address','');
 
-		var toUse = (selectedAddress == - 1) ? (isNaN(parseInt(hasNumValue)) ? 0 : hasNumValue) : selectedAddress;
+			var toUse = (selectedAddress == - 1) ? (isNaN(parseInt(hasNumValue)) ? 0 : hasNumValue) : selectedAddress;
 
-		var noInput = control.fields[f].element.replace("input-","");
-		var noRegex = noInput.replace(/\[0-9\]\*/g, "");
-		var fieldValue = noRegex.match(/[a-zA-Z]*-[1-2]{0,1}/);
-		var justFieldLetters = noRegex.match(/[a-zA-Z]*/);
+			var noInput = control.fields[f].element.replace("input-","");
+			var noRegex = noInput.replace(/\[0-9\]\*/g, "");
+			var fieldValue = noRegex.match(/[a-zA-Z]*-[1-2]{0,1}/);
+			var justFieldLetters = noRegex.match(/[a-zA-Z]*/);
 
-		if (fieldValue == null && justFieldLetters != null)
-		{
-			control.fields[f].element = 'input-' + justFieldLetters[0] + toUse;
+			if (fieldValue == null && justFieldLetters != null)
+			{
+				control.fields[f].element = 'input-' + justFieldLetters[0] + toUse;
+			}
+			else 
+			{
+				control.fields[f].element = 'input-' + fieldValue[0] + toUse;
+			}
 		}
-		else 
-		{
-			control.fields[f].element = 'input-' + fieldValue[0] + toUse;
-		}
+		control.reload();
 	}
-	control.reload();
 });
 
 }<?php endif; ?>]]>
@@ -148,7 +150,7 @@ $data['pcapredict_custom_javascript'] = $this->config->get('pcapredict_custom_ja
 	</file>
 
 	<!-- Frontend default checkout - Fields are not visible at the time of the tag load. When fields are visible calling pca.load will init them. -->
-	<file name="catalog/controller/checkout/shipping_address.php,catalog/controller/checkout/payment_address.php,catalog/controller/checkout/guest.php,catalog/controller/checkout/guest_shipping.php,catalog/controller/checkout/register.php">
+	<file name="catalog/controller/checkout/login.php,catalog/controller/checkout/shipping_address.php,catalog/controller/checkout/payment_address.php,catalog/controller/checkout/guest.php,catalog/controller/checkout/guest_shipping.php,catalog/controller/checkout/register.php">
 		<operation error="skip" info="for 2.0.x and 2.1.x">
 			<search position="after">
 				<![CDATA[public function index() {]]>
@@ -158,7 +160,7 @@ $data['pcapredict_custom_javascript'] = $this->config->get('pcapredict_custom_ja
 			</add>
 		</operation>
 	</file>
-	<file name="catalog/view/theme/*/template/checkout/shipping_address.tpl,catalog/view/theme/*/template/checkout/payment_address.tpl,catalog/view/theme/*/template/checkout/guest.tpl,catalog/view/theme/*/template/checkout/guest_shipping.tpl,catalog/view/theme/*/template/checkout/register.tpl">
+	<file name="catalog/view/theme/*/template/checkout/login.tpl,catalog/view/theme/*/template/checkout/shipping_address.tpl,catalog/view/theme/*/template/checkout/payment_address.tpl,catalog/view/theme/*/template/checkout/guest.tpl,catalog/view/theme/*/template/checkout/guest_shipping.tpl,catalog/view/theme/*/template/checkout/register.tpl">
 		<operation error="skip" info="for 2.0.x and 2.1.x">
 			<search position="bottom">
 				<![CDATA[]]>
