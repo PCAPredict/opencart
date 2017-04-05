@@ -10,7 +10,7 @@ class ControllerModulePcapredict extends Controller {
 
         $this->document->setTitle($this->language->get('heading_title'));
         $this->document->addStyle('view/stylesheet/module/tag.css');
-        $this->document->addScript('view/javascript/module/script.js');
+        $this->document->addScript('view/javascript/module/pcapredict_admin.js');
 
         $this->load->model('setting/setting');
         
