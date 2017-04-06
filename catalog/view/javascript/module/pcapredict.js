@@ -15,9 +15,7 @@
 
 //                 if (oldProvinceInstance != newInstance) {
 
-//                     var d = new Date();
-//                     var date = " - " + d.getMinutes() + ":" + d.getSeconds() + ":" + d.getMilliseconds();
-//                     if (console && console.log) { console.log("Call Update Debounce" + date); };
+//                     if (console && console.log) { console.log("Call Update Debounce"); };
 
 //                     oldProvinceInstance = newInstance;
                     
@@ -50,8 +48,8 @@ var pca_tag = (function() {
     
     var account_code = '';
     var isInited = false;
-    //var currentFieldCount = null;
-    //var watcher = null;
+    // var currentFieldCount = null;
+    // var watcher = null;
 
     function init(accountCode) {
             
@@ -101,8 +99,20 @@ var pca_tag = (function() {
                                 }
 
                                 // // Start watching for changes.
-                                // var debounceProvinceUpdate = getProvinceDebounceUpdateFunction(provinceFieldId, address.ProvinceName);
-                                // watcher = new pca_opencart_util.Watcher(provinceFieldId, debounceProvinceUpdate);
+                                // watcher = new pca_opencart_util.Watcher(provinceFieldId, pca.debounce(
+                                //     function() {
+
+                                //         if (console && console.log) { console.log("Updating Province field"); };
+
+                                //         var instance = document.getElementById(provinceFieldId);
+                                //         pca.setValue(instance, address.ProvinceName);
+                                //         pca.fire(instance, 'change');
+
+                                //         watcher.stop();
+
+                                //         reloadCapturePlusControls();
+
+                                //     }, 1200));
                                 // watcher.start();
 
                                 // The province list reloads when a country is selected, listen to the content changed of the selection field.
@@ -177,24 +187,6 @@ var pca_tag = (function() {
     //         }
     //     }
     // };
-
-    // function getProvinceDebounceUpdateFunction(elementId, provinceName) {
-
-    //     // Debounce function that will update the province field when ready.
-    //     return pca.debounce(function(elementId, provinceName) {
-
-    //         if (console && console.log) { console.log("Updating Province field"); };
-
-    //         var instance = document.getElementById(elementId);
-    //         pca.setValue(instance, provinceName);
-    //         pca.fire(instance, 'change');
-
-    //         watcher.stop();
-
-    //         reloadCapturePlusControls();
-
-    //     }, 1200);
-    // }
 
     // function getCurrentWatcher() {
     //     return watcher;
