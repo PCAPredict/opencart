@@ -1,6 +1,6 @@
 
 @REM Get current working dir name to use as archive name.
-@SET @archname= "PCAPredictTag.ocmod.zip"
+@SET @archname= "AddressyTag.ocmod.zip"
 
 @REM Try to delete the file only if it exists
 @IF EXIST %@CURR_DIR%.tgz GOTO DELETE
