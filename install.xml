@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
-	<name>PCA Predict Tag</name>
-	<id>PCA Predict Address Validation</id>
+	<name>Addressy Tag</name>
+	<id>Addressy Address Verification</id>
 	<code>1000</code>
 	<version>1.0.0.0</version>
-	<author>PCA Predict</author>
+	<author>Addressy</author>
 	<link>https://www.pcapredict.com</link>
 	
 	<!-- Header back end - Place in the header to load tag. -->
