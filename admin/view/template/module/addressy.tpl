@@ -44,10 +44,10 @@
                         <!-- Email Address label -->
                         <div class="row rowset">
 
-                            <div class="col-xs-6 col-sm-3">
+                            <div class="col-xs-12 col-sm-3">
                                 <label><b><?php echo $email_address_label ?></b></label>
                             </div>
-                            <div class="col-xs-6 col-sm-3">
+                            <div class="col-xs-12 col-sm-3">
                                 <label><?php echo $email_address; ?></label>
                             </div>
 
@@ -57,10 +57,10 @@
                         </div>
 
                         <div class="row rowset">
-                            <div class="col-xs-6 col-sm-3">
+                            <div class="col-xs-12 col-sm-3">
                                 <label><b><?php echo $status_label ?></b></label>
                             </div>
-                            <div class="col-xs-6 col-sm-3">
+                            <div class="col-xs-12 col-sm-3" style="font-size: 0;">
                                 <?php if (intval($status) == 1) : ?>
                                 <div class="switch switch-left switch--on"><span>ON</span></div>
                                 <div class="switch switch-right switch--off"><span>OFF</span></div>
@@ -113,10 +113,10 @@
                         <div class="separator"></div>
                         <!-- Logout button -->
                         <div class="row rowset">
-                            <div class="col-xs-3">
+                            <div class="col-xs-12 col-sm-3">
                                 <button class="button-light" id="btnLogOut" type="submit" form="form-addressy-logout" value="Log Out"><?php echo $button_logout; ?></button>
                             </div>
-                            <div class="col-xs-9">
+                            <div class="col-xs-12 col-sm-9">
                                 <comment>
                                     <?php echo $logout_description; ?>
                                 </comment>
