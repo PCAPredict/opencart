@@ -28,13 +28,13 @@ $(function() {
 
     function showAnyMessages() {
 
-        if ($('.pcapredict-message').html().length > 0){
+        if ($('.addressy-message').html().length > 0){
 
-            $('.pcapredict-message').show();
+            $('.addressy-message').show();
             
             hideMessages(5000, 500);
         } else {
-            $('.pcapredict-message').hide();
+            $('.addressy-message').hide();
         }
     }
 
@@ -42,7 +42,7 @@ $(function() {
         delayMs = delayMs || 0;
         animateTime = animateTime || 0;
         setTimeout(function(){
-            $('.pcapredict-message').fadeOut(animateTime);
+            $('.addressy-message').fadeOut(animateTime);
         }, delayMs);
     }
 

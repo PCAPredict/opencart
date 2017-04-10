@@ -12,14 +12,14 @@ var pca_tag = (function() {
 
             (function (a, c, b, e) {
                 a[b] = a[b] || {};
-                a[b].initial = { accountCode: account_code, host: account_code + ".pcapredict.com" };
+                a[b].initial = { accountCode: account_code, host: account_code + ".addressy.com" };
                 a[b].on = a[b].on || function () { (a[b].onq = a[b].onq || []).push(arguments) };
                 var d = c.createElement("script");
                 d.async = !0;
                 d.src = e;
                 c = c.getElementsByTagName("script")[0];
                 c.parentNode.insertBefore(d, c)
-            })(window, document, "pca", "//" + account_code + ".pcapredict.com/js/sensor.js");
+            })(window, document, "pca", "//" + account_code + ".addressy.com/js/sensor.js");
 
             // Fields get re-rendered when we fire a change on the field.
             // We populate the fields here so it persists it to the session.

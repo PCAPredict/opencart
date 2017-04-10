@@ -1,16 +1,16 @@
 <?php
 
-class ControllerModulePcapredict extends Controller {
+class ControllerModuleAddressy extends Controller {
     
     private $error = array();
 
     public function index() {
 
-        $this->load->language('module/pcapredict');
+        $this->load->language('module/addressy');
 
         $this->document->setTitle($this->language->get('heading_title'));
-        $this->document->addStyle('view/stylesheet/module/addressy.css');
-        $this->document->addScript('view/javascript/module/pcapredict_admin.js');
+        $this->document->addStyle('view/stylesheet/module/addressy.min.css');
+        $this->document->addScript('view/javascript/module/addressy_admin.js');
 
         $this->load->model('setting/setting');
         
@@ -19,16 +19,17 @@ class ControllerModulePcapredict extends Controller {
 
                 if (isset($this->request->get['login'])) 
                 {
-                    $accountCode = $_POST['account_code'];
+                    $emailaddress = $_POST['email_address'];
 
                     //Make call to pca and setup keys if needs be.
 
-                    $data_string = json_encode(array('accountcode' => $accountCode, 
+                    $data_string = json_encode(array('email' => $emailaddress,
                                                      'password' => $_POST['password'],
                                                      'deviceDescription' => 'OpenCart | ' . $_POST['hostname'],
-                                                     'deviceType' => 1));
+                                                     'deviceType' => 1,
+                                                     'brand' => "Addressy"));
 
-                    $auth_curl = curl_init('https://app_api.pcapredict.com/api/primaryaccountauthorisation');                                                                      
+                    $auth_curl = curl_init('https://app_api.pcapredict.com/api/authToken');                                                                      
                     curl_setopt($auth_curl, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
                     curl_setopt($auth_curl, CURLOPT_POSTFIELDS, $data_string);                                                                  
                     curl_setopt($auth_curl, CURLOPT_RETURNTRANSFER, true);                                                                      
@@ -45,6 +46,8 @@ class ControllerModulePcapredict extends Controller {
 
                         $decodedToken = $decoded['token']['token'];
 
+                        $accountCode = array_keys($decoded['accounts'])[0];
+
                         // We get the country code of the store so we can set the phone validation to a locality, i.e. +44 not needed for UK numbers.
                         $countryId = $this->config->get('config_country_id');
                         $this->load->model('localisation/country');
@@ -57,8 +60,8 @@ class ControllerModulePcapredict extends Controller {
                         }
 
                         $data_string = json_encode(array('generateAddress' => true, 
-                                                         'generateEmail' => true, 
-                                                         'generatePhone' => true, 
+                                                         'generateEmail' => false,
+                                                         'generatePhone' => false,
                                                          'mobileCountryCodeDefaultValue' => $storeCountryCode));
 
                         $license_curl = curl_init('https://app_api.pcapredict.com/api/apps/opencart/0.0.1/licences');                                                                      
@@ -79,28 +82,29 @@ class ControllerModulePcapredict extends Controller {
                             if (curl_getinfo($license_curl, CURLINFO_HTTP_CODE) == 401)
                             {
                                 $data['status_message'] = $this->language->get('license_http_status_401');
-                                $data['status_message_type'] = 'pcapredict-message-error';
+                                $data['status_message_type'] = 'addressy-message-error';
                             } 
                             else if (curl_getinfo($license_curl, CURLINFO_HTTP_CODE) == 200) 
                             {
                                 $data['status_message'] = $this->language->get('license_http_status_200');
-                                $data['status_message_type'] = 'pcapredict-message-success';
+                                $data['status_message_type'] = 'addressy-message-success';
                             }
                             
                             // HELP NOTE : Make sure any settings you pass in the array to the settings are prepended with the same name as the module...
                             // This stumped me for ages!
                             $storageSettings = array();
-                            $storageSettings['pcapredict_status'] = 1;
-                            $storageSettings['pcapredict_pca_token'] = $decodedToken;
-                            $storageSettings['pcapredict_account_code'] = $accountCode;
-                            $storageSettings['pcapredict_custom_javascript_frontend'] = '';
-                            $storageSettings['pcapredict_custom_javascript_backend'] = '';
-                            $this->model_setting_setting->editSetting('pcapredict', $storageSettings);
+                            $storageSettings['addressy_status'] = 1;
+                            $storageSettings['addressy_addressy_token'] = $decodedToken;
+                            $storageSettings['addressy_email_address'] = $emailaddress;
+                            $storageSettings['addressy_account_code'] = $accountCode;
+                            $storageSettings['addressy_custom_javascript_frontend'] = '';
+                            $storageSettings['addressy_custom_javascript_backend'] = '';
+                            $this->model_setting_setting->editSetting('addressy', $storageSettings);
                         } 
                         else 
                         {
                             $data['status_message'] = $this->language->get('http_status_other');
-                            $data['status_message_type'] = 'pcapredict-message-error';
+                            $data['status_message_type'] = 'addressy-message-error';
                         }
 
                         curl_close($license_curl);
@@ -110,12 +114,12 @@ class ControllerModulePcapredict extends Controller {
                         if (curl_getinfo($auth_curl, CURLINFO_HTTP_CODE) == 401)
                         {
                             $data['status_message'] = $this->language->get('login_http_status_401');
-                            $data['status_message_type'] = 'pcapredict-message-error';
+                            $data['status_message_type'] = 'addressy-message-error';
                         } 
                         else 
                         {
                             $data['status_message'] = $this->language->get('http_status_other');
-                            $data['status_message_type'] = 'pcapredict-message-error';
+                            $data['status_message_type'] = 'addressy-message-error';
                         }
                     }
 
@@ -125,24 +129,24 @@ class ControllerModulePcapredict extends Controller {
                 {
                     $status = isset($_POST['status']) ? 1 : 0;
 
-                    $storageSettings = $this->model_setting_setting->getSetting('pcapredict');
-                    $storageSettings['pcapredict_status'] = $status;
-                    $storageSettings['pcapredict_custom_javascript_frontend'] = $_POST['custom_javascript_frontend'];
-                    $storageSettings['pcapredict_custom_javascript_backend'] = $_POST['custom_javascript_backend'];
+                    $storageSettings = $this->model_setting_setting->getSetting('addressy');
+                    $storageSettings['addressy_status'] = $status;
+                    $storageSettings['addressy_custom_javascript_frontend'] = $_POST['custom_javascript_frontend'];
+                    $storageSettings['addressy_custom_javascript_backend'] = $_POST['custom_javascript_backend'];
 
-                    $this->model_setting_setting->editSetting('pcapredict', $storageSettings);
+                    $this->model_setting_setting->editSetting('addressy', $storageSettings);
 
                     $data['status_message'] = $this->language->get('settings_updated_successfully');
-                    $data['status_message_type'] = 'pcapredict-message-success';
+                    $data['status_message_type'] = 'addressy-message-success';
                 }
                 else if (isset($this->request->get['logout'])) 
                 {
-                    $storageSettings = $this->model_setting_setting->getSetting('pcapredict');
+                    $storageSettings = $this->model_setting_setting->getSetting('addressy');
 
-                    $accountcode = $storageSettings['pcapredict_account_code'];
-                    $token = $storageSettings['pcapredict_pca_token'];
+                    $accountcode = $storageSettings['addressy_account_code'];
+                    $token = $storageSettings['addressy_addressy_token'];
 
-                    $logout_curl = curl_init('https://app_api.pcapredict.com/api/authtoken');                                                                      
+                    $logout_curl = curl_init('https://app_api.pcapredict.com/api/authToken');                                                                      
                     curl_setopt($logout_curl, CURLOPT_CUSTOMREQUEST, "DELETE");                                                                     
                     curl_setopt($logout_curl, CURLOPT_RETURNTRANSFER, true); 
                     curl_setopt($logout_curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -150,7 +154,7 @@ class ControllerModulePcapredict extends Controller {
                                                                                                                                         
                     $loggedout = curl_exec($logout_curl);
 
-                    $this->model_setting_setting->editSetting('pcapredict', array());
+                    $this->model_setting_setting->editSetting('addressy', array());
 
                     curl_close($logout_curl);
                 }
@@ -160,28 +164,29 @@ class ControllerModulePcapredict extends Controller {
         // send error if there is one.
         if (isset($this->error['warning'])){
             $data['status_message'] = $this->error['warning'];
-            $data['status_message_type'] = 'pcapredict-message-error';
+            $data['status_message_type'] = 'addressy-message-error';
         }
 
-        $settings = $this->model_setting_setting->getSetting('pcapredict');
+        $settings = $this->model_setting_setting->getSetting('addressy');
 
         // Load settings.
         if ($settings && count($settings) > 0) {
-            $data['account_code'] = $settings['pcapredict_account_code'];
-            $data['pca_token'] = $settings['pcapredict_pca_token'];
-            $data['custom_javascript_frontend'] = $settings['pcapredict_custom_javascript_frontend'];
-            $data['custom_javascript_backend'] = $settings['pcapredict_custom_javascript_backend'];
-            $data['status'] = $settings['pcapredict_status'];
+            $data['email_address'] = $settings['addressy_email_address'];
+            $data['account_code'] = $settings['addressy_account_code'];
+            $data['addressy_token'] = $settings['addressy_addressy_token'];
+            $data['custom_javascript_frontend'] = $settings['addressy_custom_javascript_frontend'];
+            $data['custom_javascript_backend'] = $settings['addressy_custom_javascript_backend'];
+            $data['status'] = $settings['addressy_status'];
             $data['loggedin'] = true;
         } else {
-            $data['account_code'] = '';
-            $data['pca_token'] = '';
+            $data['email_address'] = '';
+            $data['addressy_token'] = '';
             $data['custom_javascript'] = '';
             $data['loggedin'] = false;
         }
 
         // Action url's to callback to this controller
-        $data['action'] = $this->url->link('module/pcapredict', 'token=' . $this->session->data['token'], 'SSL');
+        $data['action'] = $this->url->link('module/addressy', 'token=' . $this->session->data['token'], 'SSL');
         $data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
         
         // Button and link text.
@@ -194,7 +199,7 @@ class ControllerModulePcapredict extends Controller {
         $data['link_password_href'] = $this->language->get('link_password_href');
 
         // Labels and descriptions
-        $data['account_code_label'] = $this->language->get('account_code_label');
+        $data['email_address_label'] = $this->language->get('email_address_label');
         $data['password_label'] = $this->language->get('password_label');
         $data['status_label'] = $this->language->get('status_label');
         $data['login_description_1'] = $this->language->get('login_description_1');
@@ -218,7 +223,7 @@ class ControllerModulePcapredict extends Controller {
         );
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('module/pcapredict', 'token=' . $this->session->data['token'], 'SSL')
+            'href' => $this->url->link('module/addressy', 'token=' . $this->session->data['token'], 'SSL')
         );
 
         // Other page areas.
@@ -226,14 +231,14 @@ class ControllerModulePcapredict extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-        $output = $this->load->view('module/pcapredict.tpl', $data);
+        $output = $this->load->view('module/addressy.tpl', $data);
         
         $this->response->setOutput($output);
     }
 
 	protected function validate() {
 
-		if (!$this->user->hasPermission('modify', 'module/pcapredict')) {
+		if (!$this->user->hasPermission('modify', 'module/addressy')) {
 			$this->error['warning'] = $this->language->get('error_permission');
             return false;
 		}        

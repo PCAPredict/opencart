@@ -15,14 +15,14 @@ var pca_tag = (function() {
 
                 (function (a, c, b, e) { 
                     a[b] = a[b] || {}; 
-                    a[b].initial = { accountCode: accountCode, host: accountCode + ".pcapredict.com" }; 
+                    a[b].initial = { accountCode: accountCode, host: accountCode + ".addressy.com" }; 
                     a[b].on = a[b].on || function () { (a[b].onq = a[b].onq || []).push(arguments) };
                     var d = c.createElement("script");
                     d.async = !0; 
                     d.src = e; 
                     c = c.getElementsByTagName("script")[0];
                     c.parentNode.insertBefore(d, c)
-                })(window, document, "pca", "//"+ accountCode + ".pcapredict.com/js/sensor.js");
+                })(window, document, "pca", "//"+ accountCode + ".addressy.com/js/sensor.js");
 
                 // Need to update the state field when the country selector is changed, so we also need to fire a change on the country so it can make the ajax request to get the 
                 // state/regions. This means we need a mechanism to wait for the response and then choose the region/state.
