@@ -2,8 +2,8 @@
 <modification>
 	<name>Addressy Tag</name>
 	<id>Addressy Address Verification</id>
-	<code>1000</code>
-	<version>1.0.0.0</version>
+	<code>ADDRESSY1001</code>
+	<version>1.0.0.1</version>
 	<author>Addressy</author>
 	<link>https://www.addressy.com</link>
 	
@@ -151,48 +151,6 @@ $data['addressy_custom_javascript'] = $this->config->get('addressy_custom_javasc
 <script>pca_tag.init('<?php echo $addressy_account_code; ?>');</script>
 <script><?php if (strlen($addressy_custom_javascript) > 0) { ?><?php echo $addressy_custom_javascript; ?><?php } ?></script>
 <?php endif; ?>]]>
-			</add>
-		</operation>
-	</file>
-
-	<!-- Frontend default checkout - Fields are not visible at the time of the tag load. When fields are visible calling pca.load will init them. -->
-	<file path="catalog/controller/checkout/login.php|catalog/controller/checkout/shipping_address.php|catalog/controller/checkout/payment_address.php|catalog/controller/checkout/guest.php|catalog/controller/checkout/guest_shipping.php|catalog/controller/checkout/register.php">
-		<operation>
-			<search>
-				<![CDATA[public function index() {]]>
-			</search>
-			<add position="after">
-				<![CDATA[$data['addressy_status'] = $this->config->get('addressy_status');]]>
-			</add>
-		</operation>
-	</file>
-	<file path="catalog/view/theme/*/template/checkout/login.tpl">
-		<operation>
-			<search>
-				<![CDATA[<div class="row">]]>
-			</search>
-			<add position="before">
-				<![CDATA[<?php if ($addressy_status) : ?><script>pca.load();</script><?php endif; ?>]]>
-			</add>
-		</operation>
-	</file>
-	<file path="catalog/view/theme/*/template/checkout/shipping_address.tpl|catalog/view/theme/*/template/checkout/guest_shipping.tpl">
-		<operation>
-			<search>
-				<![CDATA[$('#collapse-shipping-address select[name=\'country_id\']').trigger('change');]]>
-			</search>
-			<add position="after">
-				<![CDATA[<?php if ($addressy_status) : ?>pca.load();<?php endif; ?>]]>
-			</add>
-		</operation>
-	</file>
-	<file path="catalog/view/theme/*/template/checkout/payment_address.tpl|catalog/view/theme/*/template/checkout/guest.tpl|catalog/view/theme/*/template/checkout/register.tpl">
-		<operation>
-			<search>
-				<![CDATA[$('#collapse-payment-address select[name=\'country_id\']').trigger('change');]]>
-			</search>
-			<add position="bottom">
-				<![CDATA[<?php if ($addressy_status) : ?>pca.load();<?php endif; ?>]]>
 			</add>
 		</operation>
 	</file>

@@ -2,7 +2,7 @@
 
 $_['heading_title']                     = 'Addressy';
 
-$_['text_module']                       = 'Modules';
+$_['text_extension']                    = 'Extensions';
 $_['text_save_success']                 = 'Successfully updated settings.';
 $_['text_logout_success']               = 'Successfully logged out.';
 
@@ -31,7 +31,7 @@ $_['custom_javascript_backend_description']   = 'Paste any custom JavaScript cod
 $_['logout_description']                 = 'Logging out will stop Addressy from working in your site. You can log back in at any time.';
 
 $_['http_status_other']                 = 'An unknown exception occured. Please try again and if the problem persists, please contact support@addressy.com';
-$_['login_http_status_401']             = 'The account code and/or password provided was incorrect.';
+$_['login_http_status_401']             = 'The username and/or password provided was incorrect.';
 $_['license_http_status_401']           = 'Authentication was not possible.';
 $_['license_http_status_200']           = 'Setup complete.';
 

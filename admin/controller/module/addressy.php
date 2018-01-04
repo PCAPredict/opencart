@@ -215,11 +215,11 @@ class ControllerModuleAddressy extends Controller {
         $data['breadcrumbs'] = array();
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
         );
         $data['breadcrumbs'][] = array(
-            'text' => $this->language->get('text_module'),
-            'href' => $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL')
+            'text' => $this->language->get('text_extension'),
+            'href' => $this->url->link('extension/extension&type=module', 'token=' . $this->session->data['token'], 'SSL')
         );
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),

@@ -1,19 +1,27 @@
-var pca_tag = (function() {
+var pca_tag = (function () {
     
     var account_code = '';
-    var isInited = false;
+    var isInitialised = false;
+
+    var currentPopulatedCountry = {};
 
     function init(accountCode) {
-            
-        if (!isInited) {
+
+        if (!isInitialised) {
 
             account_code = accountCode;
-            isInited = true;
+            isInitialised = true;
 
+            // Our standard script but loading in the account code at runtime.
             (function (a, c, b, e) {
                 a[b] = a[b] || {};
-                a[b].initial = { accountCode: account_code, host: account_code + ".addressy.com" };
-                a[b].on = a[b].on || function () { (a[b].onq = a[b].onq || []).push(arguments) };
+                a[b].initial = {
+                    accountCode: account_code,
+                    host: account_code + ".addressy.com"
+                };
+                a[b].on = a[b].on || function () {
+                    (a[b].onq = a[b].onq || []).push(arguments)
+                };
                 var d = c.createElement("script");
                 d.async = !0;
                 d.src = e;
@@ -21,70 +29,105 @@ var pca_tag = (function() {
                 c.parentNode.insertBefore(d, c)
             })(window, document, "pca", "//" + account_code + ".addressy.com/js/sensor.js");
 
-            // Fields get re-rendered when we fire a change on the field.
-            // We populate the fields here so it persists it to the session.
-            pca.on('data', function (source, key, address, variations) {
+            // This is a way of knowing when our control has loaded all the controls for the page.
+            pca.on('ready', function (p1, p2) {
 
-                switch (source) {
-                    case "address":
-                        var provinceFieldId = null;
-                        var countryFieldId = null;
-                        for (var c = 0; c < pca.capturePlus.controls.length; c++) {
-                            var cont = pca.capturePlus.controls[c];
-                            if (cont.key == key) {
-                                for (var f = 0; f < cont.fields.length; f++) {
+                pca.sourceString = 'Addressy-OpenCart-Frontend-v1.0.0.1';
 
-                                    var element = pca.getElement(cont.fields[f].element);
+                if (p2.controls.length > 0) {
 
-                                    if (cont.fields[f].field === '{CountryName}')
-                                    {
-                                        countryFieldId = element.id;
-                                    } 
-                                    else if (cont.fields[f].field === '{ProvinceName}') 
-                                    {
-                                        provinceFieldId = element.id;
-                                    }
-                                    else 
-                                    {
-                                        pca.fire(element, 'change');
-                                    }
+                    for (var i = 0; i < p2.controls.length; i++) {
+
+                        // Listen for the prepopulate so that we can store the country that relates to the last searched address.
+                        // Store it under the related key in case we have more than one fieldset on the page.
+                        p2.controls[i].listen('prepopulate', function (address) {
+
+                            var self = this;
+
+                            for (var j = 0; j < self.fields.length; j++) {
+                                if (self.fields[j].field == "{CountryName}") {
+                                    var current = document.getElementById(self.fields[j].element);
+                                    currentPopulatedCountry[self.key] = current.options[current.selectedIndex].text;
                                 }
-
-                                // The province list reloads when a country is selected, listen to the content changed of the selection field.
-                                $("#" + provinceFieldId).on('DOMSubtreeModified', function(event) 
-                                { 
-                                    $("#" + provinceFieldId).off('DOMSubtreeModified');
-                                    hasLoadedRegions(pca, provinceFieldId, address.ProvinceName);
-                                });
-
-                                // Get the country field to change.
-                                var countryField = document.getElementById(countryFieldId);
-                                pca.setValue(countryField, address.CountryName);
-                                pca.fire(countryField, 'change');
                             }
-                        }
-                        break;
-                }
-            });
+                        });
 
-            // For the default checkout, waits on the loaded spinner that shows when updating the country field.
-            function hasLoadedRegions(pca, provinceFieldId, provinceName) {
-                setTimeout(function () {
-                    if ($('.fa-spin').length > 0) {
-                        hasLoadedRegions(pca, provinceFieldId, provinceName);
-                    } else {
-                        if (provinceFieldId) {
-                            var latestInstance = document.getElementById(provinceFieldId);
-                            pca.setValue(latestInstance, provinceName);
-                            pca.fire(latestInstance, 'change');
+                        // This gets called when the control is populating the data into the fields.
+                        pca.on('data', function (source, key, address, variations) {
+                            switch (source) {
+                                // Capture plus address service.
+                                case "address":
+                                    // We only want to fire a change on the country field if the address we are returning is now in a different country.
+                                    if (currentPopulatedCountry[key] != address.CountryName) {
+                                        currentPopulatedCountry[key] = address.CountryName;
+                                        
+                                        // When this gets called we can get a reference to the controls that have been setup through the captureplus property.
+                                        for (var i = 0; i < pca.capturePlus.controls.length; i++) {
+                                            if (pca.capturePlus.controls[i].key == key) {
+                                                var fields = pca.capturePlus.controls[i].fields;
+
+                                                var country = null;
+                                                var provinceId = null;
+                                                
+                                                if (fields.length > 0){
+                                                    for (var j = 0; j < fields.length; j++) {
+                                                        if (fields[j].field == "{CountryName}") {
+                                                            country = document.getElementById(fields[j].element);
+                                                        }
+                                                        if (fields[j].field == "{ProvinceName}") {
+                                                            provinceId = fields[j].element;
+                                                        }
+                                                    }
+                                                    
+                                                    // Now we have got to the main reason for this.
+                                                    // The checkout has a selection list for the province, because our control trys to populate all the fields,
+                                                    // if the new address is a different country than the current one, we need to let the country change, update the province list
+                                                    // and then set the province list. 
+                                                    // We make a hash of the current province list and then have a timer check for the province field update.
+                                                    // When the list changes we can set the province field to what the control fetched earlier.
+                                                    var prevHash = hashCode(document.getElementById(provinceId).innerHTML);
+                                                    countyChangeCheck(provinceId, address.ProvinceName, prevHash);
+                                                    // Let the province checker start first, now fire a change on the country field so it fetches the related province list.
+                                                    pca.fire(country, 'change');
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                        });
+
+                        // Checks to see the county list has changed content. If so we can try and set the county.
+                        function countyChangeCheck(provinceFieldId, countyValue, previousHash) {
+                            if (previousHash != hashCode(document.getElementById(provinceFieldId).innerHTML)) {
+                                pca.setValue(provinceFieldId, countyValue);
+                            } else {
+                                setTimeout(function () {
+                                    countyChangeCheck(provinceFieldId, countyValue, previousHash);
+                                }, 500);
+                            }
+                        };
+
+                        // A basic function to sum up the county list.
+                        function hashCode(val) {
+                            var hash = 0;
+                            for (var i = 0; i < val.length; i++) {
+                                var character = val.charCodeAt(i);
+                                hash = ((hash << 5) - hash) + character;
+                                hash = hash & hash; // Convert to 32bit integer
+                            }
+                            return hash;
                         }
                     }
-                }, 500);
-            };
+                } 
+                else {
+                    console.log("No PCA controls found.")
+                }
+            });
         }
     };
 
     return {
-        init : init
+        init: init
     }
 })();
