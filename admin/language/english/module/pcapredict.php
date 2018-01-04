@@ -2,7 +2,7 @@
 
 $_['heading_title']                     = 'PCA Predict';
 
-$_['text_module']                       = 'Modules';
+$_['text_extensions']                   = 'Extensions';
 $_['text_save_success']                 = 'Successfully updated settings.';
 $_['text_logout_success']               = 'Successfully logged out.';
 

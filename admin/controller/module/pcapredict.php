@@ -182,7 +182,7 @@ class ControllerModulePcapredict extends Controller {
 
         // Action url's to callback to this controller
         $data['action'] = $this->url->link('module/pcapredict', 'token=' . $this->session->data['token'], 'SSL');
-        $data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
+        $data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL');
         
         // Button and link text.
         $data['button_save'] = $this->language->get('button_save');
@@ -210,11 +210,11 @@ class ControllerModulePcapredict extends Controller {
         $data['breadcrumbs'] = array();
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL')
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL')
         );
         $data['breadcrumbs'][] = array(
-            'text' => $this->language->get('text_module'),
-            'href' => $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL')
+            'text' => $this->language->get('text_extensions'),
+            'href' => $this->url->link('extension/extension&type=module', 'token=' . $this->session->data['token'], 'SSL')
         );
         $data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),

@@ -6,7 +6,8 @@
 
 ### PCA Predict Setup
 - The PCA Predict plugin should be listed in the modules section if all files were uploaded.
-- Add the module into the store and then click on the settings button.
+- BEFORE installing the PCA Predict module from the list, make sure you set the permissions first for your users. If you don't and you set them after you installed it, you might see the "permission denied" message when you click the edit link on the module.
+- Install the module.
 - Log in using your PCA Predict account code and password, this will setup the relevent keys and field mappings to get the control working accross the site.
 - Any enquiries, please contact support@pcapredict.com
 
